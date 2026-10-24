@@ -393,6 +393,25 @@ footer{background:#21140d!important;color:#f0dfc8!important}
 .activity-panel .progress,.activity-panel .progress-bar{background:#e9d3b4!important}
 @media(max-width:650px){.pro-header{background:linear-gradient(110deg,#2c1b12,#56321c)!important}}
 </style>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1100112712752830');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1100112712752830&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
 </head>
 <body>
 <header class="pro-header">
@@ -671,6 +690,18 @@ document.getElementById('orderForm').addEventListener('submit', function(e){
     if(footer) footer.style.display='none';
     if(processing) processing.style.display='none';
     if(thankYou) thankYou.style.display='flex';
+    // Count a Purchase only when the order reaches the Thank You page.
+    // The submit lock prevents duplicate submits during the processing delay.
+    if (typeof window.fbq === 'function') {
+      window.fbq('track', 'Purchase', {
+        value: total,
+        currency: 'PKR',
+        content_name: data.product || '3 Layer Compression Storage Bag',
+        content_type: 'product',
+        content_ids: [data.product || '3 Layer Compression Storage Bag'],
+        num_items: quantity
+      });
+    }
     document.body.style.overflow='auto';
     waistOrderSubmitting = false;
   }, 2000);
