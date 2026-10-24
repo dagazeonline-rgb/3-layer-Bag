@@ -626,6 +626,27 @@ document.getElementById('orderForm').addEventListener('submit', function(e){
   document.getElementById('orderPrice').value=price;
   document.getElementById('orderTotal').value=total;
 
+  // Send order details to the user's Google Apps Script Web App.
+  const googleSheetEndpoint = 'https://script.google.com/macros/s/AKfycbztefJ-shVL41QS1DMCC38Vv3jgjp28RgqfWD5ekmNZxx6gCxXzqIyy-MS9-RtG7wDg/exec';
+  const sheetOrder = {
+    name: data.name || '',
+    phone: data.phone || '',
+    city: data.city || '',
+    address: [data.address || '', data.landmark ? 'Landmark: ' + data.landmark : ''].filter(Boolean).join(' | '),
+    product: data.product || '3 Layer Compression Storage Bag',
+    quantity: quantity,
+    price: price,
+    total: total,
+    selectedDeal: deal
+  };
+  fetch(googleSheetEndpoint, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(sheetOrder)
+  }).catch(function(err) {
+    console.error('Google Sheets order submission failed:', err);
+  });
 
   const summarySubtotal=document.getElementById('summarySubtotal');
   const summaryTotal=document.getElementById('summaryTotal');
